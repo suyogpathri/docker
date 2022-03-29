@@ -1,3 +1,0 @@
-docker build -t awscdk:2.17.0 .
-
-docker run -itd -v ~/.aws:/root/.aws -v /Users/suyog.pathrikar/GitHub/sat-phishproof:/opt/app --name aws_cdk awscdk:2.17.0 bash
