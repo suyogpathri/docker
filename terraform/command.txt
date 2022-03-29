@@ -1,0 +1,3 @@
+docker build -t awscdk:1.1.7 .
+
+docker run -itd -v ~/.aws:/root/.aws -v /Users/suyog.pathrikar/GitHub/code-challenge:/opt/app --name code-challenge-tf terraform:1.1.7 bash
