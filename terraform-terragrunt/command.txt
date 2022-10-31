@@ -1,0 +1,4 @@
+docker build -t terraform:1.2.8-0.28.24 .
+
+docker run -itd -v ~/.aws:/root/.aws -v /Users/suyogp./Finlex/Git/infrastructure-modules:/opt/module -v /Users/suyogp./Finlex/Git/infrastructure-live:/opt/live --name infra terraform:1.2.8-0.28.24 bash
+
