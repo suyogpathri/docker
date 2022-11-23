@@ -7,6 +7,8 @@ ENV TERRAGRUNT_VERSION v0.28.24
 
 RUN apk -v --no-cache --update add \
         libc6-compat \
+        openssh \
+        ca-certificates \
         python2 \
         less \
         bash \
@@ -14,11 +16,20 @@ RUN apk -v --no-cache --update add \
         curl \
         wget \
         zip \
+        unzip \
         git \
-        openssh
+        && \
+    update-ca-certificates
 
-RUN python -m ensurepip
-RUN pip install --no-cache --upgrade pip setuptools
+RUN apk add --no-cache \
+        python3 \
+        py3-pip \
+    && pip3 install --upgrade pip \
+    && pip3 install --no-cache-dir \
+        awscli \
+    && rm -rf /var/cache/apk/*
+
+RUN aws --version   # Just to make sure its installed alright
 
 # Copy the SSH Key for bitbucket access
 RUN mkdir /root/.ssh/
@@ -36,6 +47,8 @@ RUN curl -sS -L -O \
     && mv terraform /usr/bin/terraform \
     && chmod +x /usr/bin/terraform
 
+# Just to make sure its installed alright
+RUN terraform --version
 
 # Install Terragrunt
 RUN cd /usr/bin && \
@@ -43,14 +56,12 @@ RUN cd /usr/bin && \
         -o /usr/bin/terragrunt \
     && chmod +x /usr/bin/terragrunt
 
+# Just to make sure its installed alright
+RUN terragrunt --version
 
 VOLUME [ "/root/.aws" ]
 VOLUME [ "/opt/module" ]
 VOLUME [ "/opt/live" ]
 
 WORKDIR /opt/
-
-CMD ["terraform", "--version"]
-CMD ["terragrunt", "--version"]
-
 
