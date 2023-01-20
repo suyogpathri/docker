@@ -1,0 +1,3 @@
+docker build -t devops:latest .
+
+docker run -itd -v ~/.aws:/root/.aws -v ~/.kube:/root/.kube -v /Users/suyogp./finlex/git/infrastructure-modules:/opt/module -v /Users/suyogp./finlex/git/infrastructure-live:/opt/live --name working devops:latest bash
