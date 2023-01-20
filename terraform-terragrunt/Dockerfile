@@ -59,7 +59,13 @@ RUN cd /usr/bin && \
 # Just to make sure its installed alright
 RUN terragrunt --version
 
+# Install Kubectl 
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+RUN chmod +x ./kubectl
+RUN mv ./kubectl /usr/local/bin
+
 VOLUME [ "/root/.aws" ]
+VOLUME [ "/root/.kube" ]
 VOLUME [ "/opt/module" ]
 VOLUME [ "/opt/live" ]
 

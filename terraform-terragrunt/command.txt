@@ -1,4 +1,7 @@
 docker build -t terraform:1.2.8-0.28.24 .
 
-docker run -itd -v ~/.aws:/root/.aws -v /Users/suyogp./finlex/git/infrastructure-modules:/opt/module -v /Users/suyogp./finlex/git/infrastructure-live:/opt/live --name infra terraform:1.2.8-0.28.24 bash
+docker run -itd -v ~/.aws:/root/.aws -v ~/.kube:/root/.kube -v /Users/suyogp./finlex/git/infrastructure-modules:/opt/module -v /Users/suyogp./finlex/git/infrastructure-live:/opt/live --name infra-1.2.8 terraform:1.2.8-0.28.24 bash
 
+docker build -t terraform-kubectl:1.2.8-0.28.24 .
+
+docker run -itd -v ~/.aws:/root/.aws -v ~/.kube:/root/.kube -v /Users/suyogp./finlex/git/infrastructure-modules:/opt/module -v /Users/suyogp./finlex/git/infrastructure-live:/opt/live --name working terraform-kubectl:1.2.8-0.28.24 bash
