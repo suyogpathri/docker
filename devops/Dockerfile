@@ -29,12 +29,15 @@ RUN apk -v --no-cache --update add \
     git
 
 RUN apk add --no-cache \
+    zsh \
     python3 \
     py3-pip \
     && pip3 install --upgrade pip \
     && pip3 install --no-cache-dir \
         awscli \
     && rm -rf /var/cache/apk/*
+
+RUN echo 'export PS1="🐳 %F{blue}$DOCKER_CONTAINER_NAME%f %~ # "' > ~/.zshrc
 
 # Copy the SSH Key for bitbucket access
 RUN mkdir /root/.ssh/
@@ -80,4 +83,4 @@ VOLUME [ "/opt/module" ]
 VOLUME [ "/opt/live" ]
 
 WORKDIR /opt/
-
+CMD [ "zsh"]
