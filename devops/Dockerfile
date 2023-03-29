@@ -37,7 +37,7 @@ RUN apk add --no-cache \
         awscli \
     && rm -rf /var/cache/apk/*
 
-RUN echo 'export PS1="🐳 %F{blue}$DOCKER_CONTAINER_NAME%f %~ # "' > ~/.zshrc
+RUN echo 'export PS1="🐳 %F{yellow}$DOCKER_CONTAINER_NAME%f %~ # "' > ~/.zshrc
 
 # Copy the SSH Key for bitbucket access
 RUN mkdir /root/.ssh/
