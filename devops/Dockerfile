@@ -34,7 +34,7 @@ RUN apk -v --no-cache --update add \
 RUN apk --update add --no-cache \
     python3 \
     && python3 -m ensurepip \
-    && pip3 install --upgrade pip \
+    && pip3 install --upgrade pip setuptools \
     && pip3 install --no-cache-dir \
         awscli \
     && rm -rf /var/cache/apk/*
