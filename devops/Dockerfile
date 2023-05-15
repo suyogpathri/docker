@@ -13,7 +13,7 @@ ENV HELM_VERSION=3.11.0
 ENV TARGET_OS=linux
 ENV TARGET_ARCH=amd64
 
-
+# Standard Utilities
 RUN apk -v --no-cache --update add \
     libc6-compat \
     openssh \
@@ -26,17 +26,20 @@ RUN apk -v --no-cache --update add \
     wget \
     zip \
     unzip \
-    git
-
-RUN apk add --no-cache \
+    git \
     zsh \
+    jq
+
+# Python3 & AWS CLI 
+RUN apk --update add --no-cache \
     python3 \
-    py3-pip \
+    && python3 -m ensurepip \
     && pip3 install --upgrade pip \
     && pip3 install --no-cache-dir \
         awscli \
     && rm -rf /var/cache/apk/*
 
+# Setup a console with docker image
 RUN echo 'export PS1="🐳 %F{yellow}$DOCKER_CONTAINER_NAME%f %~ # "' > ~/.zshrc
 
 # Copy the SSH Key for bitbucket access
@@ -54,6 +57,8 @@ RUN curl -sS -L -O \
     && unzip terraform_${TERRAFORM_VERSION}_${TARGET_OS}_${TARGET_ARCH}.zip \
     && chmod +x ./terraform \
     && mv terraform /usr/local/bin/
+
+RUN rm terraform_${TERRAFORM_VERSION}_${TARGET_OS}_${TARGET_ARCH}.zip
 
 # Install Terragrunt
 RUN curl -sS -L https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_${TARGET_OS}_${TARGET_ARCH} \
@@ -76,6 +81,8 @@ RUN set -ex; \
     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
     && chmod 700 get_helm.sh \
     && ./get_helm.sh
+
+RUN rm get_helm.sh
 
 VOLUME [ "/root/.aws" ]
 VOLUME [ "/root/.kube" ]
