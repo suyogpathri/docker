@@ -1,6 +1,6 @@
-ARG ALPINE_VERSION=3.9-alpine
+ARG ALPINE_VERSION=3.17
 
-FROM python:${ALPINE_VERSION}
+FROM alpine:${ALPINE_VERSION}
 
 # Tools version
 ENV TERRAFORM_VERSION=1.2.3
@@ -30,8 +30,14 @@ RUN apk -v --no-cache --update add \
     zsh \
     jq
 
-# AWS CLI 
-RUN apk add --no-cache aws-cli
+# Python3 & AWS CLI 
+RUN apk --update add --no-cache \
+    python3 \
+    && python3 -m ensurepip \
+    && pip3 install --upgrade pip setuptools \
+    && pip3 install --no-cache-dir \
+        awscli \
+    && rm -rf /var/cache/apk/*
 
 # Setup a console with docker image
 RUN echo 'export PS1="🐳 %F{yellow}$DOCKER_CONTAINER_NAME%f %~ # "' > ~/.zshrc
