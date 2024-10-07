@@ -2,8 +2,8 @@
 FROM alpine:3.20.3 AS build
 
 # Set versions for tools
-ARG TERRAFORM_VERSION=1.9.5
-ARG TERRAGRUNT_VERSION=0.67.15
+ENV TERRAFORM_VERSION=1.2.3
+ENV TERRAGRUNT_VERSION=0.28.24
 ARG KUBECTL_VERSION=1.31.1
 ARG KUSTOMIZE_VERSION=5.4.3
 ARG HELM_VERSION=3.15.3
@@ -48,7 +48,7 @@ COPY --from=build /kubectl /usr/local/bin/kubectl
 COPY --from=build /kustomize /usr/local/bin/kustomize
 
 # Install runtime dependencies required for the tools and environment
-RUN apk add --no-cache libc6-compat openssh bash make git zsh jq aws-cli \
+RUN apk add --no-cache libc6-compat openssh openssl less bash make curl wget git zip unzip zsh jq aws-cli \
  && echo 'export PS1="🐳 %F{yellow}$DOCKER_CONTAINER_NAME%f %~ # "' > ~/.zshrc
 
 # Create SSH directory for Bitbucket access and set up known hosts
