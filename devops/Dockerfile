@@ -39,7 +39,7 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
 
 
 # Final Stage: Start with a clean Python Alpine base
-FROM python:alpine3.20 AS final
+FROM python:3.9-alpine3.20 AS final
 
 # Copy tools from the build stage
 COPY --from=build /terraform /usr/local/bin/terraform
