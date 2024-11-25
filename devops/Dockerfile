@@ -55,13 +55,21 @@ COPY --from=build /tools/* /usr/local/bin/
 RUN apk add --no-cache libc6-compat openssh openssl less bash make curl wget git zip unzip zsh jq aws-cli \
     && rm -rf /var/cache/apk/*
 
+# Create SSH directory for Bitbucket access and set up known hosts
+RUN mkdir -p /root/.ssh/ \
+    && touch /root/.ssh/known_hosts \
+    && ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
+
+# Copy SSH key for Bitbucket access (make sure to manage this securely)
+ADD id_rsa /root/.ssh/id_rsa
+
 # Add AWS and Kubernetes environment variables to .zshrc
 RUN echo 'export PS1="🐳 %F{yellow}$DOCKER_CONTAINER_NAME%f %~ # "' > ~/.zshrc \
     && echo 'export AWS_PROFILE=tf' >> ~/.zshrc \
     && echo 'export KUBE_CONFIG_PATH=/root/.kube/config' >> ~/.zshrc
 
 # Define volumes for AWS and Kubernetes configurations to persist data
-VOLUME [ "/root/.aws", "/root/.kube", "/opt/module", "/opt/live" , "/root/.ssh" ]
+VOLUME [ "/root/.aws", "/root/.kube", "/opt/module", "/opt/live" ]
 
 # Set the working directory for subsequent commands
 WORKDIR /opt/live
