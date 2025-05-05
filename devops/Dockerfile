@@ -1,12 +1,11 @@
 # Base Stage: Use a minimal Alpine base for downloading tools
-FROM alpine:3.20.3 AS build
+FROM alpine:3.21.3 AS build
 
 # Set versions for tools
 ENV TERRAFORM_VERSION=1.2.3
 ENV TERRAGRUNT_VERSION=0.28.24
-ARG KUBECTL_VERSION=1.31.1
-ARG KUSTOMIZE_VERSION=5.4.3
-ARG HELM_VERSION=3.15.3
+ARG KUBECTL_VERSION=1.32.3
+ARG KUSTOMIZE_VERSION=5.6.0
 ARG TARGET_OS=linux
 ARG TARGET_ARCH=amd64
 
@@ -46,7 +45,7 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
 
 
 # Final Stage: Start with a clean Python Alpine base
-FROM python:3.9-alpine3.20 AS final
+FROM python:3.9.22-alpine3.21 AS final
 
 # Copy tools from the build stage
 COPY --from=build /tools/* /usr/local/bin/
@@ -69,7 +68,7 @@ RUN echo 'export PS1="🐳 %F{yellow}$DOCKER_CONTAINER_NAME%f %~ # "' > ~/.zshrc
     && echo 'export KUBE_CONFIG_PATH=/root/.kube/config' >> ~/.zshrc
 
 # Define volumes for AWS and Kubernetes configurations to persist data
-VOLUME [ "/root/.aws", "/root/.kube", "/opt/module", "/opt/live" ]
+VOLUME [ "/root/.aws", "/root/.kube", "/opt/modules", "/opt/live" ]
 
 # Set the working directory for subsequent commands
 WORKDIR /opt/live
