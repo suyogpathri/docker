@@ -60,7 +60,7 @@ RUN mkdir -p /root/.ssh/ \
     && ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
 
 # Copy SSH key for Bitbucket access (make sure to manage this securely)
-ADD id_rsa /root/.ssh/id_rsa
+ADD id_ed25519 /root/.ssh/id_ed25519
 
 # Add AWS and Kubernetes environment variables to .zshrc
 RUN echo 'export PS1="🐳 %F{yellow}$DOCKER_CONTAINER_NAME%f %~ # "' > ~/.zshrc \
