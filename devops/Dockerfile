@@ -5,13 +5,8 @@
 #   docker build -t devops-tools:latest .
 #
 # Run with bind mounts (recommended):
-#   docker run -it \
-#     -v ~/.aws:/root/.aws \
-#     -v ~/.kube:/root/.kube \
-#     -v ~/.devops_history:/root/.zsh_history_data \
-#     -v $(pwd):/opt/live \
-#     -e DOCKER_CONTAINER_NAME="devops" \
-#     devops-tools:latest
+#
+# docker run -it --rm -v "$HOME/.aws:/root/.aws" -v "$HOME/.kube:/root/.kube" -v "$HOME/finlex/git/infrastructure-modules:/opt/modules" -v "$HOME/finlex/git/infrastructure-live:/opt/live" -v $HOME/.devops_history:/root/.zsh_history_data --env "DOCKER_CONTAINER_NAME=devops" --name devops devops:latest
 #
 # Architecture: Supports both amd64 and arm64 (Apple Silicon)
 
