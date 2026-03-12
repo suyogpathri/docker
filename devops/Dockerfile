@@ -2,23 +2,23 @@
 # Includes: Terraform, Terragrunt, kubectl, kustomize, Helm, kubeswitch, AWS CLI v2
 #
 # Build:
-#   docker build -t devops-tools:latest .
+#   docker build -t devops:latest .
 #
 # Run with bind mounts (recommended):
 #
-# docker run -it --rm -v "$HOME/.aws:/root/.aws" -v "$HOME/.kube:/root/.kube" -v "$HOME/finlex/git/infrastructure-modules:/opt/modules" -v "$HOME/finlex/git/infrastructure-live:/opt/live" -v $HOME/.devops_history:/root/.zsh_history_data --env "DOCKER_CONTAINER_NAME=devops" --name devops devops:latest
+# docker run -it --rm -v "$HOME/.aws:/root/.aws" -v "$HOME/.kube:/root/.kube" -v "$HOME/finlex/git/infra-modules-infra:/opt/modules" -v "$HOME/finlex/git/infra-live-infra:/opt/live" -v $HOME/.devops_history:/root/.zsh_history_data --env "DOCKER_CONTAINER_NAME=devops" --name devops devops:latest
 #
 # Architecture: Supports both amd64 and arm64 (Apple Silicon)
 
 # Base Stage: Use a minimal Alpine base for downloading tools
-FROM alpine:3.23 AS build
+FROM alpine:3.23.3 AS build
 
 # Set versions for tools
-ENV TERRAFORM_VERSION=1.14.4
-ENV TERRAGRUNT_VERSION=0.99.1
-ARG KUBECTL_VERSION=1.35.0
-ARG KUSTOMIZE_VERSION=5.8.0
-ARG HELM_VERSION=4.1.0
+ENV TERRAFORM_VERSION=1.14.7
+ENV TERRAGRUNT_VERSION=0.99.4
+ARG KUBECTL_VERSION=1.35.2
+ARG KUSTOMIZE_VERSION=5.8.1
+ARG HELM_VERSION=4.1.3
 ARG KUBESWITCH_VERSION=0.9.3
 
 # Use Docker's built-in platform arguments for automatic architecture detection
@@ -58,7 +58,7 @@ RUN apk add --no-cache python3 py3-pip && \
 
 
 # Final Stage: Start with a minimal Alpine base
-FROM alpine:3.23 AS final
+FROM alpine:3.23.3 AS final
 
 # Copy tools from the build stage
 COPY --from=build /tools/* /usr/local/bin/
@@ -116,23 +116,6 @@ RUN apk add --no-cache \
 ADD id_ed25519 /root/.ssh/id_ed25519
 
 # Define volumes for AWS and Kubernetes configurations to persist data
-# Usage with bind mounts (recommended):
-#   docker run -it \
-#     -v ~/.aws:/root/.aws \
-#     -v ~/.kube:/root/.kube \
-#     -v ~/.devops_history:/root/.zsh_history_data \
-#     -v $(pwd):/opt/live \
-#     -e DOCKER_CONTAINER_NAME="devops" \
-#     devops-tools:latest
-#
-# Alternative with named volume:
-#   docker run -it \
-#     -v ~/.aws:/root/.aws \
-#     -v ~/.kube:/root/.kube \
-#     -v devops-history:/root/.zsh_history_data \
-#     -v $(pwd):/opt/live \
-#     -e DOCKER_CONTAINER_NAME="devops" \
-#     devops-tools:latest
 VOLUME [ "/root/.aws", "/root/.kube", "/root/.zsh_history_data", "/opt/modules", "/opt/live" ]
 
 # Set the working directory for subsequent commands
