@@ -60,6 +60,9 @@ RUN apk add --no-cache python3 py3-pip && \
 # Final Stage: Start with a minimal Alpine base
 FROM alpine:3.23.3 AS final
 
+# Timezone configuration (baked into the image)
+ENV TZ=Europe/Berlin
+
 # Copy tools from the build stage
 COPY --from=build /tools/* /usr/local/bin/
 COPY --from=build /usr/lib/python3.12 /usr/lib/python3.12
@@ -74,7 +77,10 @@ RUN apk add --no-cache \
     curl \
     zsh \
     jq \
+    tzdata \
     python3 && \
+    cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
+    echo "${TZ}" > /etc/timezone && \
     rm -rf /var/cache/apk/* && \
     # Create SSH directory and configure known hosts
     mkdir -p /root/.ssh/ && \
